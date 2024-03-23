@@ -1,9 +1,10 @@
 name: Maven Package
 
 on:
-  release:
-    types: [created]
-
+  push:
+    branches:
+      - main
+      
 jobs:
   build:
 
@@ -29,3 +30,15 @@ jobs:
         run: mvn deploy -s $GITHUB_WORKSPACE/.github/workflows/settings.xml
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Get Maven Artifact Version
+        id: get_version
+        run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "deployment/target/*.jar,runtime/target/*.jar"
+          token: ${{ secrets.GH_TOKEN }}
+          tag: v${{ steps.get_version.outputs.version }}
+          commit: ${{ github.sha }}
