@@ -5,27 +5,24 @@ import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithDefault;
-import io.smallrye.config.WithName;
 import io.smallrye.config.WithParentName;
+import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.function.BooleanSupplier;
 
 @ConfigMapping(prefix = "quarkus.custom-dev-services")
 @ConfigRoot(phase = ConfigPhase.BUILD_TIME)
 public interface Configuration {
 
-
-
-
     /**
-     * Whether a health check is published in case the smallrye-health extension is present.
+     * @return
      */
-    @WithName("health.enabled")
     @WithDefault("true")
-    boolean healthEnabled();
-
+    boolean enabled();
 
     /**
      * Additional dev services configurations
@@ -35,7 +32,7 @@ public interface Configuration {
 
 
     @ConfigGroup
-    public interface DevServicesConfig {
+    interface DevServicesConfig {
 
         /**
          * If DevServices has been explicitly enabled or disabled. DevServices is generally enabled
@@ -48,18 +45,16 @@ public interface Configuration {
         boolean enabled();
 
         /**
+         * @return
+         */
+        OptionalInt timeout();
+
+        /**
          * The container image name to use, for container based DevServices providers.
          * If you want to use Redis Stack modules (bloom, graph, search...), use:
          * {@code redis/redis-stack:latest}.
          */
         String imageName();
-
-        /**
-         * Optional fixed port the dev service will listen to.
-         * <p>
-         * If not defined, the port will be chosen randomly.
-         */
-        OptionalInt port();
 
 
         /**
@@ -116,6 +111,27 @@ public interface Configuration {
              */
             String internetProtocol();
 
+            /**
+             * TODO
+             */
+            Optional<String> nameConfig();
+
+            /**
+             * TODO
+             *
+             * @return
+             */
+            Optional<String> formatConfig();
+        }
+
+    }
+
+    class Enabled implements BooleanSupplier {
+        @Inject
+        Configuration configuration;
+
+        public boolean getAsBoolean() {
+            return configuration.enabled() && !configuration.additionalDevServices().isEmpty();
         }
     }
 }
