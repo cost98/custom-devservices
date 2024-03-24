@@ -20,7 +20,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-@Path("/custom-devservices1")
+@Path("/custom-devservices")
 @ApplicationScoped
 public class CustomDevservicesResource {
     // add some rest methods here
