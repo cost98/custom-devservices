@@ -16,6 +16,7 @@ import java.util.List;
 @BuildSteps(onlyIfNot = IsNormal.class, onlyIf = Configuration.Enabled.class)
 class CustomDevServicesProcessor {
 
+    public static final String OTHER = "http://%s:%s";
     private static volatile DevServicesResultBuildItem.RunningDevService devService;
 
     @Inject
@@ -43,8 +44,9 @@ class CustomDevServicesProcessor {
         HashMap<String, String> configMap = new HashMap<>();
         devServicesConfig.mappingPort().forEach(mappingPort -> {
             if (mappingPort.nameConfig().isPresent()) {
-                String format = mappingPort.formatConfig().orElse("%s:%s");
-                String valueConfig = String.format(format, customContainer.getHost(), customContainer.getContainerId());
+                String format = mappingPort.formatConfig().orElse(OTHER);
+                String valueConfig = String.format(format, customContainer.getHost(), customContainer.getMappedPort(mappingPort.portInternal()));
+                log.info(customContainer.getContainerId() + " " + mappingPort.nameConfig().get() + " " + valueConfig);
                 configMap.put(mappingPort.nameConfig().get(), valueConfig);
             }
         });
