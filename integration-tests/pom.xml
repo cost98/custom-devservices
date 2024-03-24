@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.cost98</groupId>
         <artifactId>custom-devservices-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>custom-devservices-integration-tests</artifactId>
     <name>Custom Devservices - Integration Tests</name>
@@ -14,11 +14,6 @@
         <skipITs>true</skipITs>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.github.cost98</groupId>
-            <artifactId>custom-devservices</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-reactive</artifactId>
