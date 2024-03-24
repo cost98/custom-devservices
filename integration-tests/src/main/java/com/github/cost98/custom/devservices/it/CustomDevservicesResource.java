@@ -27,6 +27,6 @@ public class CustomDevservicesResource {
 
     @GET
     public String hello() {
-        return "Hello custom-devservices1";
+        return "Hello custom-devservices";
     }
 }

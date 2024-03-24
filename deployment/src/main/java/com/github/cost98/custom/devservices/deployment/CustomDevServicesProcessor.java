@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -26,17 +27,20 @@ class CustomDevServicesProcessor {
     List<DevServicesResultBuildItem> feature() {
         log.info("Custom DevServices - cost98");
         return configuration.additionalDevServices()
+                .entrySet()
                 .stream()
                 .map(this::getDevBuildItem)
                 .toList();
     }
 
-    private DevServicesResultBuildItem getDevBuildItem(Configuration.DevServicesConfig devServicesConfig){
+    private DevServicesResultBuildItem getDevBuildItem(Map.Entry<String, Configuration.DevServicesConfig> entry){
+        String serviceName = entry.getKey();
+        Configuration.DevServicesConfig devServicesConfig = entry.getValue();
         CustomContainer customContainer = new CustomContainer(devServicesConfig);
         customContainer.withStartupTimeout(Duration.ofSeconds(10));
         customContainer.start();
         log.info(customContainer.toString());
-        devService = new DevServicesResultBuildItem.RunningDevService(devServicesConfig.serviceName(), customContainer.getContainerId(), customContainer::close, getConfig(devServicesConfig, customContainer));
+        devService = new DevServicesResultBuildItem.RunningDevService(serviceName, customContainer.getContainerId(), customContainer::close, getConfig(devServicesConfig, customContainer));
         return devService.toBuildItem();
     }
 
