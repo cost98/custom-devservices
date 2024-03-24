@@ -27,18 +27,9 @@ public class CustomContainer extends GenericContainer<CustomContainer> {
     }
 
     private void mapPort(Configuration.DevServicesConfig.MappingPort mappingPort) {
-        int port = mappingPort.portExposed().orElse(findRandomPort());
-        InternetProtocol internetProtocol = InternetProtocol.valueOf(mappingPort.internetProtocol());
-        addFixedExposedPort(port, mappingPort.portInternal(), internetProtocol);
+        addExposedPort(mappingPort.portInternal());
     }
 
-    private Integer findRandomPort() {
-        try (ServerSocket socket = new ServerSocket(0)) {
-            return socket.getLocalPort();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
 
     @Override
     public String toString() {

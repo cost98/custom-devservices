@@ -19,7 +19,11 @@ import java.util.function.BooleanSupplier;
 public interface Configuration {
 
     /**
-     * @return
+     * If DevServices has been explicitly enabled or disabled. DevServices is generally enabled
+     * by default, unless there is an existing configuration present.
+     * <p>
+     * When DevServices is enabled Quarkus will attempt to automatically configure and start
+     * a database when running in Dev or Test mode and when Docker is running.
      */
     @WithDefault("true")
     boolean enabled();
@@ -33,16 +37,6 @@ public interface Configuration {
 
     @ConfigGroup
     interface DevServicesConfig {
-
-        /**
-         * If DevServices has been explicitly enabled or disabled. DevServices is generally enabled
-         * by default, unless there is an existing configuration present.
-         * <p>
-         * When DevServices is enabled Quarkus will attempt to automatically configure and start
-         * a database when running in Dev or Test mode and when Docker is running.
-         */
-        @WithDefault("true")
-        boolean enabled();
 
         /**
          * @return
@@ -100,16 +94,6 @@ public interface Configuration {
              * TODO
              */
             int portInternal();
-
-            /**
-             * TODO
-             */
-            OptionalInt portExposed();
-
-            /**
-             * TODO
-             */
-            String internetProtocol();
 
             /**
              * TODO
